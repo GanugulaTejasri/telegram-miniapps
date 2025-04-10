@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Telegram - All-in-One</title>
+ <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' 
+viewBox='0 0 100 100'><text y='.9em' font-size='90'> </text></svg>">
+ <style>
+ /* Base Styles */
+ :root {
+ --primary-color: #0088cc;
+ --secondary-color: #f0f2f5;
+ --text-color: #333;
+ --light-text: #777;
+ --white: #ffffff;
+ --border-radius: 8px;
+ --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+ --defi-color: #6f42c1;
+ --gov-color: #28a745;
+ }
+ body {
+ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+ margin: 0;
+ padding: 0;
+ background-color: #f5f5f5;
+ color: var(--text-color);
+ }
+ .app-container {
+ display: flex;
+ height: 100vh;
+ max-width: 1200px;
+ margin: 0 auto;
+ background-color: var(--white);
+ box-shadow: var(--shadow);
+ }
+ .sidebar {
+ width: 80px;
+ background-color: var(--primary-color);
+ color: var(--white);
+ padding: 20px 0;
+ transition: width 0.3s ease;
+ }
+ .sidebar:hover {
+ width: 250px;
+ }
+ .logo {
+ font-size: 1.5rem;
+ font-weight: bold;
+ text-align: center;
+ padding: 10px;
+ margin-bottom: 30px;
+ border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ }
+ .logo-icon {
+ margin-right: 10px;
+ font-size: 1.8rem;
+ }
+ nav ul {
+ list-style: none;
+ padding: 0;
+ margin: 0;
+ }
+ nav li {
+ padding: 15px 20px;
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ transition: background-color 0.2s;
+ }
+ nav li:hover {
+ background-color: rgba(255, 255, 255, 0.1);
+ }
+ nav li.active {
+ background-color: rgba(255, 255, 255, 0.2);
+ }
+ nav li i {
+ margin-right: 15px;
+ font-size: 1.2rem;
+ min-width: 24px;
+ text-align: center;
+ }
+ .main-content {
+ flex: 1;
+ display: flex;
+ overflow: hidden;
+ }
+ .section {
+ flex: 1;
+ padding: 20px;
+ overflow-y: auto;
+ }
+ .hidden {
+ display: none;
+ }
+ /* Chats Section */
+ .chat-list {
+ list-style: none;
+ padding: 0;
+ margin: 0;
+ }
+ .chat-item {
+ padding: 12px 15px;
+ border-bottom: 1px solid #eee;
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ }
+ .chat-item:hover {
+ background-color: #f9f9f9;
+ }
+ .chat-avatar {
+ width: 40px;
+ height: 40px;
+ border-radius: 50%;
+ background-color: #ddd;
+ margin-right: 15px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 1.2rem;
+ }
+ .chat-info {
+ flex: 1;
+ }
+ .chat-name {
+ font-weight: 500;
+ margin-bottom: 3px;
+ }
+ .chat-last-message {
+ font-size: 0.9rem;
+ color: var(--light-text);
+ white-space: nowrap;
+ overflow: hidden;
+ text-overflow: ellipsis;
+ }
+ /* Chat Window */
+ .chat-window {
+ display: flex;
+ flex-direction: column;
+ height: 100%;
+ }
+ .chat-header {
+ padding: 15px;
+ border-bottom: 1px solid #eee;
+ display: flex;
+ align-items: center;
+ }
+ .chat-messages {
+ flex: 1;
+ padding: 15px;
+ overflow-y: auto;
+ display: flex;
+ flex-direction: column;
+ }
+ .message {
+ margin-bottom: 15px;
+ max-width: 70%;
+ padding: 10px 15px;
+ border-radius: 18px;
+ }
+ .message-outgoing {
+ align-self: flex-end;
+ background-color: var(--primary-color);
+ color: white;
+ border-radius: 18px 18px 4px 18px;
+ }
+ .message-incoming {
+ align-self: flex-start;
+ background-color: #f0f0f0;
+ border-radius: 18px 18px 18px 4px;
+ }
+ .message-sender {
+ font-weight: bold;
+ margin-bottom: 5px;
+ font-size: 0.8rem;
+ }
+ .chat-input {
+ display: flex;
+ padding: 15px;
+ border-top: 1px solid #eee;
+ }
+ .chat-input input {
+ flex: 1;
+ padding: 12px 15px;
+ border: 1px solid #ddd;
+ border-radius: 20px;
+ outline: none;
+ }
+ .chat-input button {
+ margin-left: 10px;
+ padding: 0 20px;
+ background-color: var(--primary-color);
+ color: white;
+ border: none;
+ border-radius: 20px;
+ cursor: pointer;
+ }
+ /* Mini Apps Grid */
+ .apps-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+ gap: 20px;
+ padding: 20px;
+ }
+ .app-card {
+ background: var(--white);
+ border-radius: var(--border-radius);
+ padding: 15px;
+ text-align: center;
+ cursor: pointer;
+ transition: transform 0.2s, box-shadow 0.2s;
+ box-shadow: var(--shadow);
+ }
+ .app-card:hover {
+ transform: translateY(-5px);
+ box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+ }
+ .app-icon {
+ font-size: 2rem;
+ margin-bottom: 10px;
+ color: var(--primary-color);
+ }
+ .app-name {
+ font-weight: 500;
+ }
+ /* DeFi Dashboard Styles */
+ .defi-card {
+ background: var(--white);
+ border-radius: var(--border-radius);
+ padding: 20px;
+ margin-bottom: 20px;
+ box-shadow: var(--shadow);
+ border-left: 4px solid var(--defi-color);
+ }
+ .defi-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 15px;
+ }
+ .defi-title {
+ color: var(--defi-color);
+ font-weight: bold;
+ font-size: 1.2rem;
+ }
+ .defi-balance {
+ font-size: 1.5rem;
+ font-weight: bold;
+ margin: 10px 0;
+ }
+ .defi-actions {
+ display: grid;
+ grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+ gap: 10px;
+ margin-top: 15px;
+ }
+ .defi-btn {
+ background-color: var(--defi-color);
+ color: white;
+ border: none;
+ padding: 10px;
+ border-radius: var(--border-radius);
+ cursor: pointer;
+ font-weight: bold;
+ }
+ .defi-btn.secondary {
+ background-color: #f0f0f0;
+ color: var(--defi-color);
+ }
+ .token-list {
+ list-style: none;
+ padding: 0;
+ margin: 0;
+ }
+ .token-item {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: 12px 0;
+ border-bottom: 1px solid #eee;
+ }
+ .token-info {
+ display: flex;
+ align-items: center;
+ }
+ .token-icon {
+ width: 30px;
+ height: 30px;
+ border-radius: 50%;
+ background-color: #ddd;
+ margin-right: 10px;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ }
+ .token-amount {
+ font-weight: bold;
+ }
+ /* Governance Dashboard Styles */
+ .gov-card {
+ background: var(--white);
+ border-radius: var(--border-radius);
+ padding: 20px;
+ margin-bottom: 20px;
+ box-shadow: var(--shadow);
+ border-left: 4px solid var(--gov-color);
+ }
+ .gov-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 15px;
+ }
+ .gov-title {
+ color: var(--gov-color);
+ font-weight: bold;
+ font-size: 1.2rem;
+ }
+ .proposal-list {
+ list-style: none;
+ padding: 0;
+ margin: 0;
+ }
+ .proposal-item {
+ padding: 15px 0;
+ border-bottom: 1px solid #eee;
+ }
+ .proposal-title {
+ font-weight: bold;
+ margin-bottom: 5px;
+ }
+ .proposal-desc {
+ color: var(--light-text);
+ margin-bottom: 10px;
+ font-size: 0.9rem;
+ }
+ .proposal-meta {
+ display: flex;
+ justify-content: space-between;
+ font-size: 0.8rem;
+ color: var(--light-text);
+ }
+ .proposal-votes {
+ display: flex;
+ margin-top: 10px;
+ }
+ .vote-btn {
+ flex: 1;
+ padding: 8px;
+ margin: 0 5px;
+ border: none;
+ border-radius: var(--border-radius);
+ cursor: pointer;
+ font-weight: bold;
+ }
+ .vote-yes {
+ background-color: #28a745;
+ color: white;
+ }
+ .vote-no {
+ background-color: #dc3545;
+ color: white;
+ }
+ .vote-abstain {
+ background-color: #6c757d;
+ color: white;
+ }
+ .vote-progress {
+ height: 8px;
+ background-color: #eee;
+ border-radius: 4px;
+ margin-top: 10px;
+ overflow: hidden;
+ }
+ .vote-progress-bar {
+ height: 100%;
+ background-color: var(--gov-color);
+ }
+ /* XOX Game Styles */
+ .xox-game {
+ max-width: 300px;
+ margin: 0 auto;
+ text-align: center;
+ }
+ .board {
+ display: grid;
+ grid-template-columns: repeat(3, 1fr);
+ gap: 5px;
+ margin: 20px 0;
+ }
+ .cell {
+ width: 100%;
+ aspect-ratio: 1;
+ background-color: #f0f0f0;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 2rem;
+ cursor: pointer;
+ border-radius: 5px;
+ }
+ .cell:hover {
+ background-color: #e0e0e0;
+ }
+ .game-status {
+ margin: 10px 0;
+ font-weight: bold;
+ }
+ .reset-game {
+ padding: 8px 16px;
+ background-color: var(--primary-color);
+ color: white;
+ border: none;
+ border-radius: 4px;
+ cursor: pointer;
+ }
+ /* Calculator Styles */
+ .calculator {
+ max-width: 300px;
+ margin: 0 auto;
+ border-radius: var(--border-radius);
+ overflow: hidden;
+ box-shadow: var(--shadow);
+ }
+ .calculator-screen {
+ width: 100%;
+ height: 80px;
+ border: none;
+ background-color: #252525;
+ color: #fff;
+ text-align: right;
+ padding: 20px;
+ font-size: 2rem;
+ }
+ .calculator-keys {
+ display: grid;
+ grid-template-columns: repeat(4, 1fr);
+ grid-gap: 1px;
+ background-color: #999;
+ }
+ .calculator-keys>button {
+ height: 60px;
+ background-color: #fff;
+ border: none;
+ font-size: 1.5rem;
+ cursor: pointer;
+ }
+ .calculator-keys>button:hover {
+ background-color: #eaeaea;
+ }
+ .operator {
+ background-color: #f0f0f0 !important;
+ }
+ .equal-sign {
+ background-color: var(--primary-color) !important;
+ color: white;
+ grid-row: span 4;
+ height: 100% !important;
+ }
+ .all-clear {
+ background-color: #f0595f !important;
+ color: white;
+ }
+ /* Memory Game Styles */
+ .memory-game {
+ max-width: 400px;
+ margin: 0 auto;
+ text-align: center;
+ }
+ .memory-grid {
+ display: grid;
+ grid-template-columns: repeat(4, 1fr);
+ gap: 10px;
+ margin: 20px 0;
+ }
+ .memory-card {
+ width: 100%;
+ aspect-ratio: 1;
+ background-color: var(--primary-color);
+ color: white;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 1.5rem;
+ cursor: pointer;
+ border-radius: var(--border-radius);
+ transition: transform 0.3s;
+ transform-style: preserve-3d;
+ }
+ .memory-card.flipped {
+ background-color: white;
+ color: var(--text-color);
+ transform: rotateY(180deg);
+ }
+ .memory-status {
+ margin: 10px 0;
+ font-weight: bold;
+ }
+ .reset-memory {
+ padding: 8px 16px;
+ background-color: var(--primary-color);
+ color: white;
+ border: none;
+ border-radius: 4px;
+ cursor: pointer;
+ }
+ /* Back Button */
+ .back-button {
+ background: none;
+ border: none;
+ padding: 5px;
+ color: var(--primary-color);
+ font-size: 2rem;
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ margin-bottom: 15px;
+ }
+ .back-button:hover {
+ text-decoration: none;
+ }
+ /* Responsive Design */
+ @media (max-width: 768px) {
+ .app-container {
+ flex-direction: column;
+ }
+ .sidebar {
+ width: 100%;
+ height: auto;
+ padding: 10px 0;
+ }
+ .sidebar:hover {
+ width: 100%;
+ }
+ nav ul {
+ display: flex;
+ overflow-x: auto;
+ }
+ nav li {
+ padding: 10px 15px;
+ white-space: nowrap;
+ }
+ }
+ .leftsidenav {
+    height: 100%;
+    width: 200px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    padding-top: 60px;
+    z-index: 10001;
+    display: none;
+  }
+  .leftsidenav a {
+    padding: 12px 16px;
+    text-decoration: none;
+    font-size: 18px;
+    color: white;
+    display: block;
+  }
+  .leftsidenav a:hover {
+    background-color: #575757;
+  }
+  .hamburger {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 10002;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .hamburger div {
+    width: 30px;
+    height: 4px;
+    background-color: #0088cc;
+    border-radius: 2px;
+  }
+  .call-button {
+    margin-left: 10px;
+    background-color: transparent;
+    border: none;
+    color: var(--primary-color);
+    cursor: pointer;
+    font-size: 1.1rem;
+    text-align: right;
+  }
+  .call-button:hover {
+    text-decoration: none;
+    text-align: right;
+  }
+ </style>
+</head>
+<body>
+ <div class="app-container">
+ <!-- Sidebar Navigation -->
+ <div class="sidebar">
+ <div class="logo">
+ <span class="logo-icon">📱 </span>
+ <span class="logo-text">Telegram-MultiApp</span>
+ </div>
+ <nav>
+ <ul>
+ <li class="active" data-section="chats">
+ <i>💬 </i>
+ <span>Chats</span>
+ </li>
+ <li data-section="mini-apps">
+ <i>🎮 </i>
+ <span>Mini Apps</span>
+ </li>
+ <li data-section="defi">
+ <i>💰 </i>
+ <span>DeFi Tools</span>
+ </li>
+ <li data-section="governance">
+ <i>🏛️ </i>
+ <span>Governance</span>
+ </li>
+ <li data-section="settings">
+ <i>⚙️ </i>
+ <span>Settings</span>
+ </li>
+ </ul>
+ </nav>
+ </div>
+ <!-- Main Content Area -->
+ <div class="main-content">
+ <!-- Chats Section (default view) -->
+ <div class="section" id="chats-section">
+ <ul class="chat-list">
+ <li class="chat-item" data-chat="jane">
+ <div class="chat-avatar"> 👩</div>
+ <div class="chat-info">
+ <div class="chat-name">Jane Smith</div>
+ <div class="chat-last-message">Hey, how are you doing?</div>
+ </div>
+ </li>
+ <li class="chat-item" data-chat="john">
+ <div class="chat-avatar">👨 </div>
+ <div class="chat-info">
+ <div class="chat-name">John Doe</div>
+ <div class="chat-last-message">Let's meet tomorrow</div>
+ </div>
+ </li>
+ <li class="chat-item" data-chat="dao">
+ <div class="chat-avatar">🤖 </div>
+ <div class="chat-info">
+ <div class="chat-name">DAO Bot</div>
+ <div class="chat-last-message">New proposal created</div>
+ </div>
+ </li>
+ </ul>
+ </div>
+ <!-- Mini Apps Section -->
+ <div class="section hidden" id="mini-apps-section">
+ <div class="apps-grid">
+ <!-- Mini apps will be loaded here -->
+ </div>
+ </div>
+ <!-- DeFi Tools Section -->
+ <div class="section hidden" id="defi-section">
+ <div class="defi-card">
+ <div class="defi-header">
+ <div class="defi-title">Wallet Balance</div>
+ <div class="defi-connect">Connect Wallet</div>
+ </div>
+ <div class="defi-balance">$0.00</div>
+ <div class="defi-actions">
+ <button class="defi-btn">Deposit</button>
+ <button class="defi-btn">Withdraw</button>
+ <button class="defi-btn secondary">Swap</button>
+ </div>
+ </div>
+ <div class="defi-card">
+ <div class="defi-header">
+ <div class="defi-title">Your Assets</div>
+ </div>
+ <ul class="token-list">
+ <li class="token-item">
+ <div class="token-info">
+ <div class="token-icon">ETH</div>
+ <div class="token-name">Ethereum</div>
+ </div>
+ <div class="token-amount">0.00</div>
+ </li>
+ <li class="token-item">
+ <div class="token-info">
+ <div class="token-icon">USDC</div>
+ <div class="token-name">USD Coin</div>
+ </div>
+ <div class="token-amount">0.00</div>
+ </li>
+ </ul>
+ </div>
+ </div>
+ <!-- Governance Section -->
+ <div class="section hidden" id="governance-section">
+ <div class="gov-card">
+ <div class="gov-header">
+ <div class="gov-title">Active Proposals</div>
+ <button class="defi-btn">Create Proposal</button>
+ </div>
+ <ul class="proposal-list">
+ <li class="proposal-item">
+ <div class="proposal-title">Treasury Allocation Q3</div>
+ <div class="proposal-desc">Allocate funds for development</div>
+ <div class="proposal-meta">
+ <span>Ends in 2 days</span>
+ <span>120 votes</span>
+ </div>
+ <div class="proposal-votes">
+ <button class="vote-btn vote-yes">Yes (68%)</button>
+ <button class="vote-btn vote-no">No (22%)</button>
+ <button class="vote-btn vote-abstain">Abstain (10%)</button>
+ </div>
+ <div class="vote-progress">
+ <div class="vote-progress-bar" style="width: 68%"></div>
+ </div>
+ </li>
+ </ul>
+ </div>
+ </div>
+ <!-- Settings Section -->
+ <div class="section hidden" id="settings-section">
+ <h2>Settings</h2>
+ <div class="settings-option">
+ <h3>Account</h3>
+ <p>Update your profile information</p>
+ </div>
+ <div class="settings-option">
+ <h3>Notifications</h3>
+ <p>Configure notification preferences</p>
+ </div>
+ <div class="settings-option">
+ <h3>Privacy</h3>
+ <p>Manage your privacy settings</p>
+ </div>
+ </div>
+ </div>
+ </div>
+ <script>
+ document.addEventListener('DOMContentLoaded', function() {
+ // Navigation between sections
+ const navItems = document.querySelectorAll('nav li');
+ const sections = document.querySelectorAll('.section');
+ navItems.forEach(item => {
+ item.addEventListener('click', function() {
+ // Remove active class from all items
+ navItems.forEach(navItem => navItem.classList.remove('active'));
+ // Add active class to clicked item
+ this.classList.add('active');
+ // Hide all sections
+ sections.forEach(section => section.classList.add('hidden'));
+ // Show the selected section
+ const sectionId = this.getAttribute('data-section') + '-section';
+ document.getElementById(sectionId).classList.remove('hidden');
+ });
+ });
+ // Initialize chat functionality
+ initChats();
+ // Load mini apps
+ loadMiniApps();
+ // Initialize DeFi section
+ initDeFi();
+ // Initialize Governance section
+ initGovernance();
+ });
+ // Chat functionality
+ function initChats() {
+ const chatItems = document.querySelectorAll('.chat-item');
+ chatItems.forEach(item => {
+ item.addEventListener('click', function() {
+ const chatName = this.querySelector('.chat-name').textContent;
+ openChatWindow(chatName);
+ });
+ });
+ }
+ function openChatWindow(chatName) {
+ // Hide all sections
+ document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+ // Create chat window if it doesn't exist
+ let chatWindow = document.getElementById('chat-window');
+ if (!chatWindow) {
+ chatWindow = document.createElement('div');
+ chatWindow.id = 'chat-window';
+ chatWindow.className = 'section';
+ document.querySelector('.main-content').appendChild(chatWindow);
+ }
+ // Create chat window content
+ chatWindow.innerHTML = `
+ <div class="chat-window">
+ <div class="chat-header">
+ <a href="#" onclick="navigateTo('mini-apps')">← </a>
+ <h2>${chatName}</h2>
+ </div>
+ <div class="chat-messages" id="chat-messages">
+ <div class="message message-incoming">
+ <div class="message-sender">${chatName}</div>
+ <div class="message-text">Hey there!</div>
+ </div>
+ <div class="message message-outgoing">
+ <div class="message-text">Hi! How are you?</div>
+ </div>
+ </div>
+ <div class="chat-input">
+ <input type="text" placeholder="Type a message..." id="chat-input">
+ <button id="send-button">Send</button>
+ </div>
+ </div>
+ `;
+ // Add back button functionality
+ chatWindow.querySelector('.back-button').addEventListener('click', () => {
+ chatWindow.classList.add('hidden');
+ document.getElementById('chats-section').classList.remove('hidden');
+ });
+ // Add send message functionality
+ const chatInput = chatWindow.querySelector('#chat-input');
+ const sendButton = chatWindow.querySelector('#send-button');
+ const messagesContainer = chatWindow.querySelector('#chat-messages');
+ function sendMessage() {
+ const messageText = chatInput.value.trim();
+ if (messageText) {
+ const messageElement = document.createElement('div');
+ messageElement.className = 'message message-outgoing';
+ messageElement.innerHTML = `<div class="message text">${messageText}</div>`;
+ messagesContainer.appendChild(messageElement);
+ chatInput.value = '';
+ // Scroll to bottom
+ messagesContainer.scrollTop = messagesContainer.scrollHeight;
+ // Simulate reply after 1 second
+ setTimeout(() => {
+ const replies = [
+ "That's interesting!",
+ "I see what you mean.",
+ "Let me think about that.",
+ "Thanks for letting me know!",
+ "What else is new?"
+ ];
+ const randomReply = replies[Math.floor(Math.random() * replies.length)];
+ const replyElement = document.createElement('div');
+ replyElement.className = 'message message-incoming';
+ replyElement.innerHTML = `
+ <div class="message-sender">${chatName}</div>
+ <div class="message-text">${randomReply}</div>
+ `;
+ messagesContainer.appendChild(replyElement);
+ // Scroll to bottom
+ messagesContainer.scrollTop = messagesContainer.scrollHeight;
+ }, 1000);
+ }
+ }
+ sendButton.addEventListener('click', sendMessage);
+ chatInput.addEventListener('keypress', function(e) {
+ if (e.key === 'Enter') {
+ sendMessage();
+ }
+ });
+ chatWindow.classList.remove('hidden');
+ }
+ // Mini Apps Data
+ const miniApps = [{
+ id: 'xox',
+ name: 'XOX Game',
+ icon: '⭕❌ ',
+ description: 'Classic Tic-Tac-Toe game'
+ },
+ {
+ id: 'calculator',
+ name: 'Calculator',
+ icon: '🧮 ',
+ description: 'Simple calculator'
+ },
+ {
+ id: 'memory',
+ name: 'Memory Game',
+ icon: '🧠 ',
+ description: 'Test your memory'
+ },
+ {
+ id: 'notes',
+ name: 'Notes',
+ icon: '📝 ',
+ description: 'Take quick notes'
+ }
+ ];
+ function loadMiniApps() {
+ const appsGrid = document.querySelector('.apps-grid');
+ miniApps.forEach(app => {
+ const appCard = document.createElement('div');
+ appCard.className = 'app-card';
+ appCard.innerHTML = `
+ <div class="app-icon">${app.icon}</div>
+ <div class="app-name">${app.name}</div>
+ `;
+ appCard.addEventListener('click', () => launchMiniApp(app.id));
+ appsGrid.appendChild(appCard);
+ });
+ }
+ function launchMiniApp(appId) {
+ // Hide all sections
+ document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+ // Create app container if it doesn't exist
+ let appContainer = document.getElementById('mini-app-container');
+ if (!appContainer) {
+ appContainer = document.createElement('div');
+ appContainer.id = 'mini-app-container';
+ appContainer.className = 'section';
+ document.querySelector('.main-content').appendChild(appContainer);
+ }
+ // Clear previous app
+ appContainer.innerHTML = '';
+ // Add back button
+ const backButton = document.createElement('button');
+ backButton.className = 'back-button';
+ backButton.innerHTML = '<a href="#" onclick="navigateTo(\'mini-apps\')">← </a>';
+ backButton.addEventListener('click', () => {
+ appContainer.classList.add('hidden');
+ document.getElementById('mini-apps-section').classList.remove('hidden');
+ });
+ appContainer.appendChild(backButton);
+ // Load the selected app
+ switch (appId) {
+ case 'xox':
+ loadXOXGame(appContainer);
+ break;
+ case 'calculator':
+ loadCalculator(appContainer);
+ break;
+ case 'memory':
+ loadMemoryGame(appContainer);
+ break;
+ case 'notes':
+ loadNotesApp(appContainer);
+ break;
+ default:
+ appContainer.innerHTML += `<h2>${appId} app will be here</h2>`;
+ }
+ appContainer.classList.remove('hidden');
+ }
+ // XOX Game Implementation
+ function loadXOXGame(container) {
+ container.innerHTML += `
+ <h2>XOX Game</h2>
+ <div class="xox-game">
+ <div class="board">
+ <div class="cell" data-index="0"></div>
+ <div class="cell" data-index="1"></div>
+ <div class="cell" data-index="2"></div>
+ <div class="cell" data-index="3"></div>
+ <div class="cell" data-index="4"></div>
+ <div class="cell" data-index="5"></div>
+ <div class="cell" data-index="6"></div>
+ <div class="cell" data-index="7"></div>
+ <div class="cell" data-index="8"></div>
+ </div>
+ <div class="game-status">Player X's turn</div>
+ <button class="reset-game">Reset Game</button>
+ </div>
+ `;
+ // XOX game logic
+ let currentPlayer = 'X';
+ let gameBoard = ['', '', '', '', '', '', '', '', ''];
+ let gameActive = true;
+ const statusDisplay = container.querySelector('.game-status');
+ const cells = container.querySelectorAll('.cell');
+ const resetButton = container.querySelector('.reset-game');
+ const winningConditions = [
+ [0, 1, 2],
+ [3, 4, 5],
+ [6, 7, 8], // rows
+ [0, 3, 6],
+ [1, 4, 7],
+ [2, 5, 8], // columns
+ [0, 4, 8],
+ [2, 4, 6] // diagonals
+ ];
+ function handleCellClick(e) {
+ const clickedCell = e.target;
+ const clickedCellIndex = parseInt(clickedCell.getAttribute('data-index'));
+ if (gameBoard[clickedCellIndex] !== '' || !gameActive) return;
+ gameBoard[clickedCellIndex] = currentPlayer;
+ clickedCell.textContent = currentPlayer;
+ checkResult();
+ }
+ function checkResult() {
+ let roundWon = false;
+ for (let i = 0; i < winningConditions.length; i++) {
+ const [a, b, c] = winningConditions[i];
+ if (gameBoard[a] === '' || gameBoard[b] === '' || gameBoard[c] === '') continue;
+ if (gameBoard[a] === gameBoard[b] && gameBoard[b] === gameBoard[c]) {
+ roundWon = true;
+ break;
+ }
+ }
+ if (roundWon) {
+ statusDisplay.textContent = `Player ${currentPlayer} wins!`;
+ gameActive = false;
+ return;
+ }
+ if (!gameBoard.includes('')) {
+ statusDisplay.textContent = "Game ended in a draw!";
+ gameActive = false;
+ return;
+ }
+ currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+ statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
+ }
+ function resetGame() {
+ currentPlayer = 'X';
+ gameBoard = ['', '', '', '', '', '', '', '', ''];
+ gameActive = true;
+ statusDisplay.textContent = `Player ${currentPlayer}'s turn`;
+ cells.forEach(cell => {
+ cell.textContent = '';
+ });
+ }
+ cells.forEach(cell => cell.addEventListener('click', handleCellClick));
+ resetButton.addEventListener('click', resetGame);
+ }
+ // Calculator Implementation
+ function loadCalculator(container) {
+ container.innerHTML += `
+ <h2>Calculator</h2>
+ <div class="calculator">
+ <input type="text" class="calculator-screen" value="" disabled />
+ <div class="calculator-keys">
+ <button type="button" class="operator" value="+">+</button>
+ <button type="button" class="operator" value="-">-</button>
+ <button type="button" class="operator" value="*">&times;</button>
+ <button type="button" class="operator" value="/">&divide;</button>
+ 
+ <button type="button" value="7">7</button>
+ <button type="button" value="8">8</button>
+ <button type="button" value="9">9</button>
+ 
+ <button type="button" value="4">4</button>
+ <button type="button" value="5">5</button>
+ <button type="button" value="6">6</button>
+ 
+ <button type="button" value="1">1</button>
+ <button type="button" value="2">2</button>
+ <button type="button" value="3">3</button>
+ 
+ <button type="button" value="0">0</button>
+ <button type="button" class="decimal" value=".">.</button>
+ <button type="button" class="all-clear" value="all-clear">AC</button>
+ 
+ <button type="button" class="equal-sign" value="=">=</button>
+ </div>
+ </div>
+ `;
+ // Calculator logic
+ const calculator = container.querySelector('.calculator');
+ const keys = calculator.querySelector('.calculator-keys');
+ const display = calculator.querySelector('.calculator-screen');
+ let firstOperand = null;
+ let operator = null;
+ let waitingForSecondOperand = false;
+ keys.addEventListener('click', e => {
+ if (!e.target.matches('button')) return;
+ const {
+ value
+ } = e.target;
+ if (value === 'all-clear') {
+ display.value = '';
+ firstOperand = null;
+ operator = null;
+ waitingForSecondOperand = false;
+ return;
+ }
+ if (!isNaN(value) || value === '.') {
+ if (waitingForSecondOperand) {
+ display.value = value;
+ waitingForSecondOperand = false;
+ } else {
+ display.value = display.value === '0' ? value : display.value + value;
+ }
+ return;
+ }
+ if (['+', '-', '*', '/'].includes(value)) {
+ if (firstOperand === null) {
+ firstOperand = parseFloat(display.value);
+ } else if (operator) {
+ const result = calculate(firstOperand, parseFloat(display.value), operator);
+ display.value = String(result);
+ firstOperand = result;
+ }
+ operator = value;
+ waitingForSecondOperand = true;
+ return;
+ }
+ if (value === '=') {
+ if (firstOperand === null || !operator) return;
+ const result = calculate(firstOperand, parseFloat(display.value), operator);
+ display.value = String(result);
+ firstOperand = null;
+ operator = null;
+ }
+ });
+ function calculate(first, second, operator) {
+ switch (operator) {
+ case '+':
+ return first + second;
+ case '-':
+ return first - second;
+ case '*':
+ return first * second;
+ case '/':
+ return first / second;
+ default:
+ return second;
+ }
+ }
+ }
+ // Memory Game Implementation
+ function loadMemoryGame(container) {
+ container.innerHTML += `
+ <h2>Memory Game</h2>
+ <div class="memory-game">
+ <div class="memory-grid"></div>
+ <div class="memory-status">Find all matching pairs!</div>
+ <button class="reset-memory">Reset Game</button>
+ </div>
+ `;
+ // Memory game logic
+ const emojis = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
+ let cards = [...emojis, ...emojis];
+ let flippedCards = [];
+ let matchedPairs = 0;
+ let canFlip = true;
+ const grid = container.querySelector('.memory-grid');
+ const statusDisplay = container.querySelector('.memory-status');
+ const resetButton = container.querySelector('.reset-memory');
+ // Shuffle cards
+ function shuffleCards() {
+ for (let i = cards.length - 1; i > 0; i--) {
+ const j = Math.floor(Math.random() * (i + 1));
+ [cards[i], cards[j]] = [cards[j], cards[i]];
+ }
+ }
+ // Create card elements
+ function createCards() {
+ grid.innerHTML = '';
+ cards.forEach((emoji, index) => {
+ const card = document.createElement('div');
+ card.className = 'memory-card';
+ card.dataset.index = index;
+ card.dataset.value = emoji;
+ card.textContent = '?';
+ card.addEventListener('click', flipCard);
+ grid.appendChild(card);
+ });
+ }
+ // Flip card
+ function flipCard() {
+ if (!canFlip || this.classList.contains('flipped') || flippedCards.length >= 2) return;
+ this.classList.add('flipped');
+ this.textContent = this.dataset.value;
+ flippedCards.push(this);
+ if (flippedCards.length === 2) {
+ canFlip = false;
+ checkForMatch();
+ }
+ }
+ // Check for match
+ function checkForMatch() {
+ const [card1, card2] = flippedCards;
+ if (card1.dataset.value === card2.dataset.value) {
+ // Match found
+ matchedPairs++;
+ statusDisplay.textContent = `Pairs found: ${matchedPairs}/${emojis.length}`;
+ if (matchedPairs === emojis.length) {
+ statusDisplay.textContent = "Congratulations! You won!";
+ }
+ flippedCards = [];
+ canFlip = true;
+ } else {
+ // No match
+ setTimeout(() => {
+ card1.classList.remove('flipped');
+ card2.classList.remove('flipped');
+ card1.textContent = '?';
+ card2.textContent = '?';
+ flippedCards = [];
+ canFlip = true;
+ }, 1000);
+ }
+ }
+ // Reset game
+ function resetGame() {
+ flippedCards = [];
+ matchedPairs = 0;
+ canFlip = true;
+ statusDisplay.textContent = "Find all matching pairs!";
+ shuffleCards();
+ createCards();
+ }
+ // Initialize game
+ resetButton.addEventListener('click', resetGame);
+ resetGame();
+ }
+ // Notes App Implementation
+ function loadNotesApp(container) {
+ container.innerHTML += `
+ <h2>Notes</h2>
+ <div class="notes-app">
+ <div class="notes-list" id="notes-list">
+ <!-- Notes will be added here -->
+ </div>
+ <div class="add-note">
+ <input type="text" placeholder="Add a new note..." id="new-note">
+ <button id="add-note-btn">Add</button>
+ </div>
+ </div>
+ `;
+ const notesList = container.querySelector('#notes-list');
+ const newNoteInput = container.querySelector('#new-note');
+ const addNoteBtn = container.querySelector('#add-note-btn');
+ let notes = [];
+ function renderNotes() {
+ notesList.innerHTML = '';
+ if (notes.length === 0) {
+ notesList.innerHTML = '<div class="no-notes">No notes yet. Add one above!</div>';
+ return;
+ }
+ notes.forEach((note, index) => {
+ const noteElement = document.createElement('div');
+ noteElement.className = 'note-item';
+ noteElement.innerHTML = `
+ <span>${note}</span>
+ <button class="delete-note" data-index="${index}"> </button>
+ `;
+ notesList.appendChild(noteElement);
+ });
+ // Add delete handlers
+ document.querySelectorAll('.delete-note').forEach(btn => {
+ btn.addEventListener('click', function() {
+ const index = parseInt(this.getAttribute('data-index'));
+ notes.splice(index, 1);
+ renderNotes();
+ });
+ });
+ }
+ function addNote() {
+ const noteText = newNoteInput.value.trim();
+ if (noteText) {
+ notes.push(noteText);
+ newNoteInput.value = '';
+ renderNotes();
+ }
+ }
+ addNoteBtn.addEventListener('click', addNote);
+ newNoteInput.addEventListener('keypress', (e) => {
+ if (e.key === 'Enter') {
+ addNote();
+ }
+ });
+ renderNotes();
+ }
+ // DeFi Section Implementation
+ function initDeFi() {
+ const connectWalletBtn = document.querySelector('.defi-connect');
+ if (connectWalletBtn) {
+ connectWalletBtn.addEventListener('click', function() {
+ this.textContent = 'Connected: 0x1a2...3b4c';
+ document.querySelector('.defi-balance').textContent = '$2,450.50';
+ // Update token balances
+ const tokenAmounts = document.querySelectorAll('.token-amount');
+ if (tokenAmounts.length >= 2) {
+ tokenAmounts[0].textContent = '1.25'; // ETH
+ tokenAmounts[1].textContent = '1,000.00'; // USDC
+ }
+ });
+ }
+ }
+ // Governance Section Implementation
+ function initGovernance() {
+ const voteButtons = document.querySelectorAll('.vote-btn');
+ voteButtons.forEach(button => {
+ button.addEventListener('click', function() {
+ alert('Vote recorded! Thank you for participating in governance.');
+ });
+ });
+ }
+ </script>
+ <div class="hamburger" onclick="toggleSidenav()">
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+  
+  <div id="leftNav" class="leftsidenav">
+    <a href="?page=chats">Chats</a>
+    <a href="?page=mini-apps">Mini Apps</a>
+    <a href="?page=defi">DeFi Tools</a>
+    <a href="?page=governance">Governance</a>
+    <a href="?page=settings">Settings</a>
+  </div>
+  
+  <script>
+    function toggleSidenav() {
+      const nav = document.getElementById("leftNav");
+      nav.style.display = nav.style.display === "block" ? "none" : "block";
+    }
+  
+    function getPageFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      return params.get("page") || "chats";
+    }
+  
+    function loadSinglePage() {
+      const page = getPageFromURL();
+      document.querySelectorAll(".section").forEach(s => s.classList.add("hidden"));
+      const target = document.getElementById(`${page}-section`);
+      if (target) target.classList.remove("hidden");
+      document.querySelector(".sidebar").style.display = "none";
+    }
+  
+    document.addEventListener("DOMContentLoaded", loadSinglePage);
+  </script>
+  <script>
+    function openChatWindow(chatName) {
+      document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+  
+      let chatWindow = document.getElementById('chat-window');
+      if (!chatWindow) {
+        chatWindow = document.createElement('div');
+        chatWindow.id = 'chat-window';
+        chatWindow.className = 'section';
+        document.querySelector('.main-content').appendChild(chatWindow);
+      }
+  
+      chatWindow.innerHTML = `
+        <div class="chat-window">
+          <div class="chat-header">
+            <button class="back-button"><br>←</button>
+            <h2>${chatName}</h2>
+            <button class="call-button" onclick="startCall('${chatName}')" text-align="center">📞 Call</button>
+          </div>
+          <div class="chat-messages" id="chat-messages">
+            <div class="message message-incoming">
+              <div class="message-sender">${chatName}</div>
+              <div class="message-text">Hey there!</div>
+            </div>
+            <div class="message message-outgoing">
+              <div class="message-text">Hi! How are you?</div>
+            </div>
+          </div>
+          <div class="chat-input">
+            <input type="text" placeholder="Type a message..." id="chat-input">
+            <button id="send-button">Send</button>
+          </div>
+        </div>
+      `;
+  
+      chatWindow.querySelector('.back-button').addEventListener('click', () => {
+        chatWindow.classList.add('hidden');
+        document.getElementById('chats-section').classList.remove('hidden');
+      });
+  
+      const chatInput = chatWindow.querySelector('#chat-input');
+      const sendButton = chatWindow.querySelector('#send-button');
+      const messagesContainer = chatWindow.querySelector('#chat-messages');
+  
+      function sendMessage() {
+        const messageText = chatInput.value.trim();
+        if (messageText) {
+          const messageElement = document.createElement('div');
+          messageElement.className = 'message message-outgoing';
+          messageElement.innerHTML = `<div class="message-text">${messageText}</div>`;
+          messagesContainer.appendChild(messageElement);
+          chatInput.value = '';
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+  
+          setTimeout(() => {
+            const replies = [
+              "That's interesting!",
+              "I see what you mean.",
+              "Let me think about that.",
+              "Thanks for letting me know!",
+              "What else is new?"
+            ];
+            const randomReply = replies[Math.floor(Math.random() * replies.length)];
+            const replyElement = document.createElement('div');
+            replyElement.className = 'message message-incoming';
+            replyElement.innerHTML = `<div class="message-sender">${chatName}</div><div class="message-text">${randomReply}</div>`;
+            messagesContainer.appendChild(replyElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          }, 1000);
+        }
+      }
+  
+      sendButton.addEventListener('click', sendMessage);
+      chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendMessage();
+      });
+  
+      chatWindow.classList.remove('hidden');
+    }
+  
+    function startCall(user) {
+      alert(`Calling ${user}...`);
+    }
+  </script>
+  <script>function navigateTo(section) {
+    // Update the URL without reloading the page
+    history.pushState(null, '', `?page=${section}`);
+    
+    // Show only the selected section
+    document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+    const target = document.getElementById(`${section}-section`);
+    if (target) target.classList.remove('hidden');
+  
+    // Optional: hide dynamic content like app containers
+    if (document.getElementById('mini-app-container')) {
+      document.getElementById('mini-app-container').classList.add('hidden');
+    }
+  
+    // Reset sidebar view if applicable
+    const navItems = document.querySelectorAll('nav li');
+    navItems.forEach(item => item.classList.remove('active'));
+    const selected = document.querySelector(`nav li[data-section="${section}"]`);
+    if (selected) selected.classList.add('active');
+  }
+  </script>
+</body>
+</html>
